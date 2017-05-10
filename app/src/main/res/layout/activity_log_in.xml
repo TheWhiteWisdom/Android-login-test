@@ -28,7 +28,6 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:text="stagecast@tester.com"
             android:textAlignment="center" />
 
         <EditText
@@ -37,7 +36,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Password"
-            android:text="abc123"
             android:inputType="textPassword"
             android:textAlignment="center" />
 
@@ -56,31 +54,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="Sign in" />
+                android:text="Login" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Register here"
-            android:textAlignment="center"
-            android:textColor="?android:attr/textColorLink"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

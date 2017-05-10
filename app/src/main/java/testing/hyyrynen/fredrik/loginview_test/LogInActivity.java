@@ -33,30 +33,32 @@ public class LogInActivity extends AppCompatActivity implements AsyncProcessList
         email_field = (EditText) findViewById(R.id.email_editText);
         password_field = (EditText) findViewById(R.id.password_editText);
         signInButton = (Button) findViewById(R.id.signIn_button);
+
+        // Send login request on button click
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Send request
-                sendSignInRequest(email_field.getText().toString(), password_field.getText().toString());
                 // Disable fields and buttons.
                 // Also indicates an attempt to sign in.
                 email_field.setEnabled(false);
                 password_field.setEnabled(false);
                 signInButton.setEnabled(false);
+                // Send request
+                sendSignInRequest(email_field.getText().toString(), password_field.getText().toString());
             }
         });
     }
 
     void sendSignInRequest(String email, String password){
         try {
-            /* Setup JSON object for message */
+            // Setup JSON object for message
             JSONObject signInDetail = new JSONObject();
             signInDetail.put("email", email);
             signInDetail.put("password", password);
 
-            /* Send message and wait for response */
+            // Send message and wait for response
+            // HTTPCommunicator is defined further down the page
             HTTPCommunicator httpCommunicator = new HTTPCommunicator();
-            System.err.println("Data:\n" + signInDetail.toString());
             httpCommunicator.asyncProcessListener = this;
             httpCommunicator.execute("http://stagecast.se/api/users/login", signInDetail.toString());
         } catch (JSONException e) {
@@ -66,7 +68,7 @@ public class LogInActivity extends AppCompatActivity implements AsyncProcessList
 
 
     @Override
-    public void processFinished(String response) {
+    public void loginProcessFinished(String response) {
         // Enable fields and buttons
         // Sign in attempt finished
         email_field.setEnabled(true);
@@ -128,13 +130,13 @@ public class LogInActivity extends AppCompatActivity implements AsyncProcessList
 // Run HTTP requests on separate threads
 class HTTPCommunicator extends AsyncTask<String, Void, String>{
 
+    // Set this before calling execute from calling object.
     AsyncProcessListener asyncProcessListener = null;
 
     @Override
     protected String doInBackground(String... params) {
         String resultData = "";
         HttpURLConnection urlConnection = null;
-        System.err.println(params[1]);
         try {
             // Setup and open connection
             URL url = null;
@@ -149,7 +151,6 @@ class HTTPCommunicator extends AsyncTask<String, Void, String>{
 
             // Send data
             DataOutputStream dos = new DataOutputStream(urlConnection.getOutputStream());
-            System.err.println("Posting: " + params[1]);
             dos.writeBytes(params[1]);
             dos.flush();
             dos.close();
@@ -165,8 +166,6 @@ class HTTPCommunicator extends AsyncTask<String, Void, String>{
                     inputData = isr.read();
                 }
             }
-            else
-                System.err.println("Response code: " + urlConnection.getResponseCode());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -184,10 +183,11 @@ class HTTPCommunicator extends AsyncTask<String, Void, String>{
     protected void onPostExecute(String response){
         super.onPostExecute(response);
         // Call for response handling
-        asyncProcessListener.processFinished(response);
+        if(asyncProcessListener != null)
+            asyncProcessListener.loginProcessFinished(response);
     }
 }
 
 interface AsyncProcessListener{
-    void processFinished(String result);
+    void loginProcessFinished(String result);
 }
